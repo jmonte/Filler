@@ -1,4 +1,4 @@
 Filler
-======
+==========
 
-Generates Placeholder Text on the client side 
+Generates Placeholder Text on the client-side

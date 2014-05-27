@@ -1,0 +1,27 @@
+{
+  "name": "Filler",
+  "version": "0.1.0",
+  "summary": "Generates Placeholder Text on the client side",
+  "description": "Filler helps you to populate your empty mockups with appropriate content. No need for copy pasting sample data for your website.",
+  "keywords": [
+    "placholder",
+    "text",
+    "development",
+    "string generator"
+  ],
+  "main": "Filler.js",
+  "author": {
+    "name": "Jeffrey Monte",
+    "url": "http://www.jeffreymonte.com"
+  },
+  "homepage": "https://github.com/jmonte/Filler",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jmonte/Filler"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-jshint": "~0.6.0"
+  }
+}
