@@ -1,0 +1,48 @@
+- a public function that will return string based on the Fillers text Type
+	Fillers.getName();	// generates random name
+	Fillers.getPhone();	// generates random phone
+- Use of CSS class based in integrating
+	<div class="filler-name"></div>
+	<div class="filler-phone"></div>
+- Easier system for storing/adding/enhancing available text
+	Filler.addFirstName('Bob');
+	Filler.addLastName('Drake');
+	Filler.addAlias(['Mystique' , 'Magneto']);
+- 
+{
+	format 	: '',				// default value will be {{0}}
+	list 	: [],				// can be multidimensional {{0}} {{1}}
+	text    : function(){},		// defines and overrides the format and list
+}
+
+
+
+- Documentation practice
+
+
+
+
+
+/********
+			DONE FEATURE
+********/
+- Use smarty like templating to display text as a format, sample:
+	"Hi my name is {{name}}"  - {{name}} will be converted to Fillers.name();
+	Fillers.set('fruit',{
+		'format' : '{{num}} {{0}}'			// returns "7 apples"
+	});
+
+- Easier definition of Text Types
+	Filler.define('fruit' , function( o ){ return "Apple"  });
+	Filler.define('fruit' , {
+		'format' : '%i {{this}}',
+		'list'	 : ['Apple', 'Orange' , 'Pear'], 
+		'text'   : function( o ) {
+			return "Apple";
+		}
+	})
+
+
+
+
+After this features V1.0!!
