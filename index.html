@@ -3,6 +3,19 @@
 <head>
 	<title>Filler</title>
 
+</head>
+<body>
+
+
+<div  data-filler="name"></div>
+<div  data-filler="fruit"></div>
+<div  data-filler="countingFruit"></div>
+<div  data-filler="firstName"></div>
+<div  data-filler="phone"></div>
+<div  data-filler="lorem/4/1"></div>
+
+
+
 <script type="text/javascript" src="./Filler.js" > </script>
 <script type="text/javascript">
 	Filler.define('fruit' , {
@@ -13,18 +26,11 @@
 			'watermelon'
 		]
 	});
+	Filler.define('countingFruit' , {
+			'format' : '%2i {{fruit}}'
+	});
 
 </script>
-</head>
-<body>
-
-
-<div  data-filler="name"></div>
-<div  data-filler="fruit"></div>
-<div  data-filler="firstName"></div>
-<div  data-filler="phone"></div>
-<div  data-filler="lorem/3/1"></div>
-
 
 
 </body>
