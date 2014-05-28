@@ -1,7 +1,4 @@
 
-- Use of CSS class based in integrating
-	<div class="filler-name"></div>
-	<div class="filler-phone"></div>
 - Easier system for storing/adding/enhancing available text
 	Filler.addFirstName('Bob');
 	Filler.addLastName('Drake');
@@ -40,5 +37,8 @@
 	Fillers.get('fruit');	// generates random name
 	Fillers.get('phone');	// generates random phone
 
+- Use of CSS class based in integrating
+	<div class="filler-name"></div>
+	<div class="filler-phone"></div>
 
 After this features V1.0!!

@@ -79,10 +79,23 @@ var Filler = Filler || {};
 
 		for( var i = 0 ; i < elements.length ; i++  ) {
 			var textElement = elements[i];
+
 			var val = textElement.getAttribute(settings.attr);
-			var args = val.split('/');
-			var type = args[0];
-			args.shift();
+			var args;
+			var type;
+			if( val != null) {
+				// data-attr mode
+				args = val.split('/');
+				type = args[0];
+				args.shift();
+			} else {
+				// css mode
+				var regex = /\s?filler-([a-z0-9]+)\s?/i;
+				var match =regex.exec(textElement.className);
+				if( match[1] ) {
+					type = match[1];
+				}
+			}
 
 			// console.log( args );
 			if( o!== undefined && o.type !== undefined ) {
@@ -107,15 +120,16 @@ var Filler = Filler || {};
 
 	function executeType( type , args ) {
 		var finalText;
-		if( textTypes[type] !== undefined ) {
+		var typeObj = textTypes[type];
+		if( typeObj !== undefined ) {
 			// check if text is not available
-			if(  textTypes[type].text === undefined ) {
+			if(  typeObj.text === undefined ) {
 				// check if format is available
-				if( textTypes[type].format !== undefined ) {
+				if( typeObj.format !== undefined && typeObj.format ) {
 					// follow the format!
 
 					// check for int
-					finalText = textTypes[type].format.replace(/%(\d)?i/g, function(match , num) { 
+					finalText = typeObj.format.replace(/%(\d)?i/g, function(match , num) { 
 							var numText = "";
 							if( num == "" ) num = 1;	// num not defined set it to 1
 							for(var i = 0 ; i < num ; i++ ) {
@@ -137,14 +151,12 @@ var Filler = Filler || {};
 
 					// change {{0}} from the items on the list
 					finalText = finalText.replace(/\{\{([0-9]+)\}\}/gi , function( match , index){
-						console.log( match + " - " + index );
-						if( typeof textTypes[type].list[index] != "object" && !Array.isArray(textTypes[type].list[index])) {
+						if( typeof typeObj.list[index] != "object" && !Array.isArray(typeObj.list[index])) {
 							// get from the random value on the list
-							console.log( textTypes[type].list[Math.floor(Math.random()*textTypes[type].list.length)] );
-							return textTypes[type].list[Math.floor(Math.random()*textTypes[type].list.length)];
+							return typeObj.list[Math.floor(Math.random()*typeObj.list.length)];
 						} else {
 							// get from the random value on the list[index]
-							return textTypes[type].list[index][Math.floor(Math.random()*textTypes[type].list.length)];
+							return typeObj.list[index][Math.floor(Math.random()*typeObj.list.length)];
 						}
 					});
 
@@ -163,8 +175,8 @@ var Filler = Filler || {};
 
 				} else {
 					// check if list is available
-					if( textTypes[type].list !== undefined ) {
-						finalText = textTypes[type].list[Math.floor(Math.random()*textTypes[type].list.length)];
+					if( typeObj.list !== undefined ) {
+						finalText = typeObj.list[Math.floor(Math.random()*typeObj.list.length)];
 					} else {
 						// throw a warning
 						console.warn('Invalid Filler definition :' + type);
@@ -172,7 +184,7 @@ var Filler = Filler || {};
 				}
 			} else {
 				// execute text
-				finalText = textTypes[type].text( args );		
+				finalText = typeObj.text( args );		
 			}
 		}
 		return finalText;
@@ -213,6 +225,9 @@ var Filler = Filler || {};
 	function getFillerElements() {
 		var elements = [];
 		elements = elements.concat(getElementsByAttribute(settings.attr));
+		for(var key in textTypes ) {
+			elements = elements.concat( getElementWithClass('filler-'+ key) );
+		}
 		// console.log(elements);
 		return elements;
 	}
@@ -304,6 +319,18 @@ var Filler = Filler || {};
 	    }
 	}
 
+
+	function getElementWithClass(matchClass) {
+		var elemList = [];
+	    var elems = document.getElementsByTagName('*'), i;
+	    for (i in elems) {
+	        if((' ' + elems[i].className + ' ').indexOf(' ' + matchClass + ' ')
+	                > -1) {
+	            elemList.push(elems[i]);
+	        }
+	    }
+	    return elemList;
+	}
 
 
 	Array.prototype.contains = function(k) {
