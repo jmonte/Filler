@@ -1,51 +1,33 @@
 
-var Filler = Filler | {};
+var Filler = Filler || {};
 (function( app , win ){
-	var settings = {
-		"attr" : "data-filler",
-		types : { 
-			"name" : {
-				min  : 10 ,
-				max  : 20 ,
-				text : function( o) {
-					var firstName = [ "Charles",
-									  "Francis",
-									  "Scott",
-									  "Robert",
-									  "Louis",
-									  "Bobby"
-									   ];
-					var lastName = [ "Xavier",
-									 "Summers",
-									 "Drake",
-									 "Worthington",
-									 "McCoy",
-									 "Grey"];
 
-					var name = firstName[Math.floor(Math.random()*firstName.length)] + " " +
-						lastName[Math.floor(Math.random()*lastName.length)];
-					// console.log(name);
-					return name;
-				}
-			},
-			"phone" : {
-				min  : 10 ,
-				max  : 20 ,
-				format : "",
-				text : function( o ) {
-					// "(899) 951-8005";
-					var phone = '('+paddingLeft("000" , Math.random()*999 , 3)+') ' + 
-							 	paddingLeft("000" , Math.random()*999 , 3) + '-' + 
- 								paddingLeft("0000" , Math.random()*9999 , 4)
-					return phone;
-				}		
-			},
-			"text"	 : {
-				min  : 200,
-				max	 : 300,
-				paragraphs: 2,
-				text : function ( o ) {
-					var list = [
+	var textTypes = {
+		'firstName' : {
+			'list' : [ "Charles",
+					   "Francis",
+					   "Scott",
+					   "Robert",
+					   "Louis",
+					   "Bobby"
+					  ]
+		},
+		'lastName' : {
+			'list' : [ 	"Xavier",
+					 	"Summers",
+					 	"Drake",
+					 	"Worthington",
+					 	"McCoy",
+					 	"Grey"]
+		},
+		'name' : {
+			'format' : '{{firstName}} {{lastName}}'
+		},
+		'phone' : {
+			'format' : '(%3i) %i-%4i'
+		},
+		'lorem' : {
+			list :  [
 						"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus varius diam id dapibus malesuada. Praesent et metus vitae leo consectetur faucibus. Maecenas sodales velit rhoncus volutpat dignissim. Quisque facilisis venenatis magna in sagittis. In hac habitasse platea dictumst. Morbi mattis egestas arcu non convallis. Morbi non libero eget purus luctus pharetra sit amet id risus. Etiam nulla libero, porta convallis orci eu, pulvinar aliquam odio. Nullam egestas libero neque. Duis suscipit lobortis metus, placerat aliquam orci sollicitudin nec. Nullam feugiat, nunc id convallis pharetra, dui nisi tincidunt ante, ut venenatis velit lectus quis mi. Vivamus ante justo, gravida a aliquam in, molestie eget lectus. Aliquam facilisis arcu sit amet justo pulvinar, eu imperdiet erat tincidunt.",
 						"Morbi ac ultrices tellus. Maecenas mattis rhoncus risus sed cursus. Aenean ac accumsan lectus, vel pellentesque ante. Nam nec lectus id tortor ornare porta. Curabitur porta metus sed orci pellentesque auctor. Aenean imperdiet varius orci, a vestibulum ante. Mauris sed cursus sem, in fermentum erat. Vestibulum eget risus non magna egestas cursus. Praesent a felis volutpat, venenatis velit sit amet, dapibus nisl. Phasellus et justo sapien. Integer a nisl et arcu ultrices consequat. Nam ac mollis enim. Pellentesque vel tristique quam. Aliquam neque sapien, varius a egestas nec, dapibus at nisi. Nunc cursus, felis non cursus ullamcorper, turpis eros sollicitudin lectus, id condimentum sapien massa sed enim.",
 						"Sed vel dictum tellus, ut iaculis neque. In eros erat, molestie non lorem congue, auctor mattis erat. Mauris interdum dictum orci nec aliquet. Integer eget enim eu sem vulputate placerat nec vel ante. Ut pharetra fermentum tristique. Vivamus rutrum tortor nisi, sed molestie metus malesuada in. Donec eu augue vehicula, tristique nisi ac, vestibulum lorem. Nullam adipiscing adipiscing nisi ut fringilla. Donec tincidunt elementum sapien sit amet aliquet. Donec mi purus, volutpat et nunc id, tristique porttitor eros. Vestibulum eget dignissim urna. Ut vel metus dolor. Donec interdum nulla vitae vehicula bibendum.",
@@ -66,20 +48,27 @@ var Filler = Filler | {};
 						"Aliquam erat volutpat. Nulla non vestibulum risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce posuere massa in elit varius, sed elementum dolor mollis. Sed pharetra congue vulputate. Aliquam in blandit magna. In dignissim volutpat turpis. Aliquam rhoncus, mauris ut tincidunt dignissim, urna erat dignissim ipsum, ac aliquet tortor felis ac felis. Nunc tempus ornare molestie. Donec mollis fringilla ultricies.",
 						"Donec sit amet diam ut augue mattis volutpat quis nec erat. Vestibulum cursus velit velit, sed eleifend turpis mattis quis. Nulla ipsum nunc, semper at bibendum id, adipiscing quis neque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur scelerisque nibh vitae venenatis bibendum. Suspendisse commodo pretium risus vel congue. Integer egestas arcu mauris, eu facilisis lacus blandit nec. Ut in scelerisque lacus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas lacinia purus vitae convallis pulvinar. Sed pharetra lorem ac pulvinar sodales. Proin in tempus massa. Fusce ut justo at purus dapibus rhoncus eget vitae erat. Aliquam erat volutpat.",
 						"Pellentesque risus risus, facilisis vel egestas quis, pretium pharetra orci. Sed id eros justo. Phasellus pharetra suscipit arcu a ultrices. Donec blandit rutrum eleifend. Donec feugiat ante eu nisi congue, lacinia feugiat metus vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam ac fringilla urna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus ante risus, ultricies eu tellus ac, molestie imperdiet purus. Sed non ultrices sapien, quis pulvinar nisl. Fusce egestas pharetra suscipit. Morbi blandit orci at eleifend condimentum. Nunc rhoncus, diam in pretium gravida, mauris orci sollicitudin mi, vitae ultrices neque nulla a libero. Duis aliquam metus libero, eget gravida est porttitor at. Curabitur viverra elit purus, sagittis egestas elit fermentum vitae."
-					];
-					var sett = extend( this , o );
-					var text = "";
-					console.log( sett );
-					for( var i = 0 ; i < sett.num ; i++ ) {
-						text+=  (!!sett.flag?"<p>":"")  + list[i] + (!!sett.flag?"</p>":"");
-					}
-					return text;
+					],
+			text : function( o ) {
+				var sett = extend( this , o );
+				var text = "";
+				var numParagraphs = sett[0];
+				var flags = sett[1];
+				// console.log( sett );
+				for( var i = 0 ; i < numParagraphs ; i++ ) {
+					text+=  (!!flags?"<p>":"")  + this.list[Math.floor(Math.random()*this.list.length)] + (!!flags?"</p>":"");
 				}
+				return text;
 			}
+		}
+	}
 
-		}   // types settings
 
+	var settings = {
+		"attr" : "data-filler",
+		"letters" : "abcdefghijklmnopqrstuvwxyz"
 	};  // settings var
+
 
 
 
@@ -91,21 +80,102 @@ var Filler = Filler | {};
 		for( var i = 0 ; i < elements.length ; i++  ) {
 			var textElement = elements[i];
 			var val = textElement.getAttribute(settings.attr);
-			val = val.split('/');
-			var type = val[0];
-			var range = val[1];
-			var num = val[2];
-			var set = {
-				range : val[1],
-				num   : val[2],
-				flag  : parseInt(val[3])
-			};
-			console.log(type + ((range !== undefined)?(" / " + range):""));
+			var args = val.split('/');
+			var type = args[0];
+			args.shift();
 
-			if( settings.types[type] !== undefined  ) {
-				textElement.innerHTML = settings.types[type].text(set);
+			// console.log( args );
+			if( o!== undefined && o.type !== undefined ) {
+				if( typeof o.type == "string" && type == o.type ) {
+					var finalText = executeType(type , args);
+					textElement.innerHTML = finalText;
+					finalText = null;		
+				}
+			} else {
+				var finalText = executeType(type , args);
+				textElement.innerHTML = finalText;
+				finalText = null;	
+			}
+			
+			// if( settings.types[type] !== undefined  ) {
+
+			// 	textElement.innerHTML = settings.types[type].text(args);
+			// }
+		}
+	}
+
+
+	function executeType( type , args ) {
+		var finalText;
+		if( textTypes[type] !== undefined ) {
+			// check if text is not available
+			if(  textTypes[type].text === undefined ) {
+				// check if format is available
+				if( textTypes[type].format !== undefined ) {
+					// follow the format!
+
+					// check for int
+					finalText = textTypes[type].format.replace(/%(\d)?i/g, function(match , num) { 
+							var numText = "";
+							if( num == "" ) num = 1;	// num not defined set it to 1
+							for(var i = 0 ; i < num ; i++ ) {
+								numText +=  Math.floor(Math.random()*9);
+							}
+							return numText;
+						});
+
+					// check for string
+					finalText = finalText.replace(/%(\d)?s/g, function(match , num) { 
+							var numText = "";
+							if( num == "" ) num = 1;	// num not defined set it to 1
+							for(var i = 0 ; i < num ; i++ ) {
+								numText += settings.letters[Math.floor(Math.random()*settings.letters.length)];
+							}
+							return numText;
+						});
+
+
+					// change {{0}} from the items on the list
+					finalText = finalText.replace(/\{\{([0-9]+)\}\}/gi , function( match , index){
+						console.log( match + " - " + index );
+						if( typeof textTypes[type].list[index] != "object" && !Array.isArray(textTypes[type].list[index])) {
+							// get from the random value on the list
+							console.log( textTypes[type].list[Math.floor(Math.random()*textTypes[type].list.length)] );
+							return textTypes[type].list[Math.floor(Math.random()*textTypes[type].list.length)];
+						} else {
+							// get from the random value on the list[index]
+							return textTypes[type].list[index][Math.floor(Math.random()*textTypes[type].list.length)];
+						}
+					});
+
+					// check for {{strings}}
+					finalText = finalText.replace(/\{\{([a-z0-9]+)\}\}/gi , function( match , type){
+						var text = executeType( type );
+						if( text !== undefined ) {
+							return text;
+						} else {
+							console.warn('Filler Definition Not Found:' + type);
+							return match;
+						}
+					});
+
+
+
+				} else {
+					// check if list is available
+					if( textTypes[type].list !== undefined ) {
+						finalText = textTypes[type].list[Math.floor(Math.random()*textTypes[type].list.length)];
+					} else {
+						// throw a warning
+						console.warn('Invalid Filler definition :' + type);
+					}
+				}
+			} else {
+				// execute text
+				finalText = textTypes[type].text( args );		
 			}
 		}
+		return finalText;
 	}
 
 	bindReady(function() { 
@@ -113,11 +183,34 @@ var Filler = Filler | {};
 	});
 
 
+	app.define = function( name , args ) {
+		// console.log( typeof args );
+		if( typeof name == "string" ) {
+			if( typeof args == "function" ) {
+				// assign function to text
+				if( textTypes[name] == undefined ) {
+					textTypes[name] = {};
+				}
+				textTypes[name].text = args;
+			} else if ( typeof args == "object") {
+				if( args.text !== undefined || args.format !== undefined || args.list !== undefined ) {
+					textTypes[name] = args;
+				}
+			} else {
+				console.warn("Invalid Filler Definition: "+ name);	
+			}
+		} else {
+			console.warn("Invalid Filler Name: "+ name);
+		}
+	}
+
+
+
+
 	function getFillerElements() {
 		var elements = [];
 		elements = elements.concat(getElementsByAttribute(settings.attr));
-		console.log(elements);
-
+		// console.log(elements);
 		return elements;
 	}
 
@@ -153,15 +246,6 @@ var Filler = Filler | {};
 	function paddingLeft (paddingValue , theString , length) {
 	   return String(paddingValue + theString).slice(-length);
 	};
-
-
-
-
-
-
-
-
-
 
 	function bindReady(handler){
 
@@ -219,7 +303,12 @@ var Filler = Filler | {};
 
 
 
-
+	Array.prototype.contains = function(k) {
+    for(var p in this)
+        if(this[p] === k)
+            return true;
+    return false;
+}
 
 
 })( Filler , window );
