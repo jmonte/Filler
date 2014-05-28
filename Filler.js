@@ -127,49 +127,8 @@ var Filler = Filler || {};
 				// check if format is available
 				if( typeObj.format !== undefined && typeObj.format ) {
 					// follow the format!
-
-					// check for int
-					finalText = typeObj.format.replace(/%(\d)?i/g, function(match , num) { 
-							var numText = "";
-							if( num == "" ) num = 1;	// num not defined set it to 1
-							for(var i = 0 ; i < num ; i++ ) {
-								numText +=  Math.floor(Math.random()*9);
-							}
-							return numText;
-						});
-
-					// check for string
-					finalText = finalText.replace(/%(\d)?s/g, function(match , num) { 
-							var numText = "";
-							if( num == "" ) num = 1;	// num not defined set it to 1
-							for(var i = 0 ; i < num ; i++ ) {
-								numText += settings.letters[Math.floor(Math.random()*settings.letters.length)];
-							}
-							return numText;
-						});
-
-
-					// change {{0}} from the items on the list
-					finalText = finalText.replace(/\{\{([0-9]+)\}\}/gi , function( match , index){
-						if( typeof typeObj.list[index] != "object" && !Array.isArray(typeObj.list[index])) {
-							// get from the random value on the list
-							return typeObj.list[Math.floor(Math.random()*typeObj.list.length)];
-						} else {
-							// get from the random value on the list[index]
-							return typeObj.list[index][Math.floor(Math.random()*typeObj.list.length)];
-						}
-					});
-
-					// check for {{strings}}
-					finalText = finalText.replace(/\{\{([a-z0-9]+)\}\}/gi , function( match , type){
-						var text = executeType( type );
-						if( text !== undefined ) {
-							return text;
-						} else {
-							console.warn('Filler Definition Not Found:' + type);
-							return match;
-						}
-					});
+					finalText = fillerFormatter( typeObj.format , typeObj );
+					
 
 
 
@@ -198,17 +157,25 @@ var Filler = Filler || {};
 	app.define = function( name , args ) {
 		// console.log( typeof args );
 		if( typeof name == "string" ) {
+			if( textTypes[name] === undefined ) {
+				textTypes[name] = {};
+			}
 			if( typeof args == "function" ) {
 				// assign function to text
-				if( textTypes[name] == undefined ) {
-					textTypes[name] = {};
-				}
 				textTypes[name].text = args;
+			} else if( typeof args == 'string') {
+				textTypes[name].format = args;
 			} else if ( typeof args == "object") {
-				if( args.text !== undefined || args.format !== undefined || args.list !== undefined ) {
-					textTypes[name] = args;
+				if( args.text !== undefined ) {
+					textTypes[name].text = args.text;
 				}
-			} else {
+				if( args.format !== undefined ) {
+					textTypes[name].format = args.format;
+				}
+				if( args.list !== undefined ) {
+					textTypes[name].list = args.list;
+				}
+			} else  {
 				console.warn("Invalid Filler Definition: "+ name);	
 			}
 		} else {
@@ -232,6 +199,60 @@ var Filler = Filler || {};
 		return elements;
 	}
 
+
+	function fillerFormatter( finalText , typeObj ) {
+		// check for int
+					
+		finalText = finalText.replace(/%(\d)?i/g, function(match , num) { 
+				var numText = "";
+				if( num === "" ) num = 1;	// num not defined set it to 1
+				for(var i = 0 ; i < num ; i++ ) {
+					numText +=  Math.floor(Math.random()*9);
+				}
+				return numText;
+			});
+
+		// check for string
+		finalText = finalText.replace(/%(\d)?s/g, function(match , num) { 
+				var numText = "";
+				if( num === "" ) num = 1;	// num not defined set it to 1
+				for(var i = 0 ; i < num ; i++ ) {
+					numText += settings.letters[Math.floor(Math.random()*settings.letters.length)];
+				}
+				return numText;
+			});
+
+
+		if( typeObj !== undefined ) {
+			// change {{0}} from the items on the list
+			finalText = finalText.replace(/\{\{([0-9]+)\}\}/gi , function( match , index){
+				if( typeObj.list !== undefined ) {
+					if( typeof typeObj.list[index] != "object" && !Array.isArray(typeObj.list[index])) {
+						// get from the random value on the list
+						return typeObj.list[Math.floor(Math.random()*typeObj.list.length)];
+					} else {
+						// get from the random value on the list[index]
+						return typeObj.list[index][Math.floor(Math.random()*typeObj.list.length)];
+					}
+				} else {
+					return match;
+				}
+			});
+		}
+
+		// check for {{strings}}
+		var returnText = finalText.replace(/\{\{([a-z0-9]+)\}\}/gi , function( match , type){
+			var text = executeType( type );
+			if( text !== undefined ) {
+				return text;
+			} else {
+				console.warn('Filler Definition Not Found:' + type);
+				return match;
+			}
+		});
+
+		return returnText;
+	}
 
 
 	// search by elements attribute
@@ -263,7 +284,7 @@ var Filler = Filler || {};
 
 	function paddingLeft (paddingValue , theString , length) {
 	   return String(paddingValue + theString).slice(-length);
-	};
+	}
 
 	function bindReady(handler){
 
@@ -273,6 +294,16 @@ var Filler = Filler || {};
 			if (called) return
 			called = true
 			handler()
+		}
+
+		function tryScroll(){
+			if (called) return
+			try {
+				document.documentElement.doScroll("left")
+				ready()
+			} catch(e) {
+				setTimeout(tryScroll, 10)
+			}
 		}
 
 		if ( document.addEventListener ) { // native event
@@ -285,15 +316,7 @@ var Filler = Filler || {};
 
 			// IE, the document is not inside a frame
 			if ( document.documentElement.doScroll && !isFrame ) {
-				function tryScroll(){
-					if (called) return
-					try {
-						document.documentElement.doScroll("left")
-						ready()
-					} catch(e) {
-						setTimeout(tryScroll, 10)
-					}
-				}
+				
 				tryScroll()
 			}
 
@@ -324,8 +347,7 @@ var Filler = Filler || {};
 		var elemList = [];
 	    var elems = document.getElementsByTagName('*'), i;
 	    for (i in elems) {
-	        if((' ' + elems[i].className + ' ').indexOf(' ' + matchClass + ' ')
-	                > -1) {
+	        if((' ' + elems[i].className + ' ').indexOf(' ' + matchClass + ' ') > -1) {
 	            elemList.push(elems[i]);
 	        }
 	    }
