@@ -1,6 +1,4 @@
-- a public function that will return string based on the Fillers text Type
-	Fillers.getName();	// generates random name
-	Fillers.getPhone();	// generates random phone
+
 - Use of CSS class based in integrating
 	<div class="filler-name"></div>
 	<div class="filler-phone"></div>
@@ -8,20 +6,16 @@
 	Filler.addFirstName('Bob');
 	Filler.addLastName('Drake');
 	Filler.addAlias(['Mystique' , 'Magneto']);
-- 
-{
-	format 	: '',				// default value will be {{0}}
-	list 	: [],				// can be multidimensional {{0}} {{1}}
-	text    : function(){},		// defines and overrides the format and list
-}
-
-
 
 - Documentation practice
 
 
 
-
+{
+	format 	: '',				// default value will be {{0}}
+	list 	: [],				// can be multidimensional {{0}} {{1}}
+	text    : function(){},		// defines and overrides the format and list
+}
 
 /********
 			DONE FEATURE
@@ -42,7 +36,9 @@
 		}
 	})
 
-
+- a public function that will return string based on the Fillers text Type
+	Fillers.get('fruit');	// generates random name
+	Fillers.get('phone');	// generates random phone
 
 
 After this features V1.0!!

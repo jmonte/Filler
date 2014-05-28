@@ -205,6 +205,9 @@ var Filler = Filler || {};
 	}
 
 
+	app.get = function( name ) {
+		return executeType( name );
+	}
 
 
 	function getFillerElements() {
