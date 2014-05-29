@@ -139,7 +139,7 @@ var Filler = Filler || {};
 						}
 					} else {
 						// throw a warning
-						console.warn('Invalid Filler definition :' + type);
+						// console.warn('Invalid Filler definition :' + type);
 					}
 				}
 			} else {
@@ -184,10 +184,10 @@ var Filler = Filler || {};
 
 				}
 			} else  {
-				console.warn("Invalid Filler Definition: "+ name);	
+				// console.warn("Invalid Filler Definition: "+ name);	
 			}
 		} else {
-			console.warn("Invalid Filler Name: "+ name);
+			// console.warn("Invalid Filler Name: "+ name);
 		}
 	}
 
@@ -219,9 +219,9 @@ var Filler = Filler || {};
 	function fillerFormatter( finalText , typeObj ) {
 		// check for int
 					
-		finalText = finalText.replace(/%(\d)?i/g, function(match , num) { 
+		finalText = finalText.replace(/\%(\d)?i/g, function(match , num) { 
 				var numText = "";
-				if( num === "" ) num = 1;	// num not defined set it to 1
+				if( num === "" || num === undefined ) num = 1;	// num not defined set it to 1
 				for(var i = 0 ; i < num ; i++ ) {
 					numText +=  Math.floor(Math.random()*9);
 				}
@@ -229,7 +229,7 @@ var Filler = Filler || {};
 			});
 
 		// check for string
-		finalText = finalText.replace(/%(\d)?s/g, function(match , num) { 
+		finalText = finalText.replace(/\%(\d)?s/g, function(match , num) { 
 				var numText = "";
 				if( num === "" ) num = 1;	// num not defined set it to 1
 				for(var i = 0 ; i < num ; i++ ) {
@@ -262,7 +262,7 @@ var Filler = Filler || {};
 			if( text !== undefined ) {
 				return text;
 			} else {
-				console.warn('Filler Definition Not Found:' + type);
+				// console.warn('Filler Definition Not Found:' + type);
 				return match;
 			}
 		});

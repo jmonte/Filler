@@ -7,25 +7,13 @@ describe("New Definition" , function() {
 
 		jasmine.addMatchers({
 			toBeInTheList : function( util, customEqualityTesters ) {
-
 				return {
 					compare: function( actual , list) {
 						var result = {};
-						result.pass = false;
-						for( var i = 0 ; i < list.length ; i++ ) {
-							if( actual.contains(list[i])) {
-								result.pass = true;
-								break;
-							}
-						}
-
+						result.pass = list.contains(actual);
 						return result;						
 					}
-
-
-
 				}
-
 			}
 		});
 

@@ -21,6 +21,12 @@ module.exports = function(grunt) {
         src: ['filler.js']
       }
     },
+     jasmine: {
+      src: "Filler.js",
+      options: {
+        specs: "spec.js"
+      }
+    },
     uglify: {
       options: {
         banner: '<%= banner %>'
@@ -29,15 +35,26 @@ module.exports = function(grunt) {
         src: '<%= pkg.name %>.js' ,
         dest: '<%= pkg.name %>.min.js'
       }
-    }
+    },
+    watch: {
+      scripts: {
+        files: ['*.js' , '*.html'],
+        tasks: ['jshint', 'uglify' , 'jasmine'],
+        options: {
+          spawn: false,
+        },
+      },
+    },
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks("grunt-contrib-jasmine");
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'uglify' , 'jasmine' , 'watch']);
 
 };
