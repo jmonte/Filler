@@ -191,12 +191,16 @@ var Filler = Filler || {};
 		}
 	}
 
+	app.undefine = function ( name ) {
+		textTypes[name] = undefined;
+	}
+
 
 	app.text = function( name ) {
 		return executeType( name );
 	}
 
-	app.defined = function( name ) {
+	app.get = function( name ) {
 		return textTypes[name];
 	}
 

@@ -30,16 +30,16 @@ describe("New Definition" , function() {
 		});
 
 
-		Filler.types[name] = undefined;
+		Filler.undefine(name);
 	});
 
 
 	it("With No Argument" , function() {
 		Filler.define(name);
 		expect(Filler.text(name)).toBeUndefined();
-		expect(Filler.defined(name).text).toBeUndefined;
-		expect(Filler.defined(name).format).toBeUndefined();
-		expect(Filler.defined(name).list).toBeUndefined();
+		expect(Filler.get(name).text).toBeUndefined;
+		expect(Filler.get(name).format).toBeUndefined();
+		expect(Filler.get(name).list).toBeUndefined();
 	});
 
 	it("With a Function" , function() {
@@ -47,9 +47,9 @@ describe("New Definition" , function() {
 				return list[0];
 		});
 		expect(Filler.text(name)).toEqual(list[0]);
-		expect(typeof Filler.defined(name).text).toEqual('function');
-		expect(Filler.defined(name).format).toBeUndefined();
-		expect(Filler.defined(name).list).toBeUndefined();
+		expect(typeof Filler.get(name).text).toEqual('function');
+		expect(Filler.get(name).format).toBeUndefined();
+		expect(Filler.get(name).list).toBeUndefined();
 	});
 
 	it("With a Function but No return value" , function() {
@@ -57,44 +57,44 @@ describe("New Definition" , function() {
 			var i = 0 ; list.length;
 		});
 		expect(Filler.text(name)).toBeUndefined();
-		expect(typeof Filler.defined(name).text).toEqual('function');
-		expect(Filler.defined(name).format).toBeUndefined();
-		expect(Filler.defined(name).list).toBeUndefined();
+		expect(typeof Filler.get(name).text).toEqual('function');
+		expect(Filler.get(name).format).toBeUndefined();
+		expect(Filler.get(name).list).toBeUndefined();
 	});
 
 	it("With a format String" , function() {
 		Filler.define(name , format);
 		expect(Filler.text(name)).toMatch(/(\d) \{\{0\}\}/);
-		expect(Filler.defined(name).text).toBeUndefined();
-		expect(typeof Filler.defined(name).format).toEqual('string');
-		expect(Filler.defined(name).list).toBeUndefined();
+		expect(Filler.get(name).text).toBeUndefined();
+		expect(typeof Filler.get(name).format).toEqual('string');
+		expect(Filler.get(name).list).toBeUndefined();
 	});
 
 
 	it("With an Empty Format String" , function() {
 		Filler.define(name , '');
 		expect(Filler.text(name)).toBeUndefined();
-		expect(Filler.defined(name).text).toBeUndefined();
-		expect(typeof Filler.defined(name).format).toEqual('string');
-		expect(Filler.defined(name).list).toBeUndefined();
+		expect(Filler.get(name).text).toBeUndefined();
+		expect(typeof Filler.get(name).format).toEqual('string');
+		expect(Filler.get(name).list).toBeUndefined();
 	});
 
 
 	it("With a Populated array" , function() {
 		Filler.define(name , list);
 		expect(Filler.text(name)).toBeInTheList(list);
-		expect(Filler.defined(name).text).toBeUndefined();
-		expect(Filler.defined(name).format).toBeUndefined();
-		expect(typeof Filler.defined(name).list).toEqual('object');
+		expect(Filler.get(name).text).toBeUndefined();
+		expect(Filler.get(name).format).toBeUndefined();
+		expect(typeof Filler.get(name).list).toEqual('object');
 	});
 
 
 	it("With an Empty array" , function() {
 		Filler.define(name , []);
 		expect(Filler.text(name)).toBeUndefined();
-		expect(Filler.defined(name).text).toBeUndefined();
-		expect(Filler.defined(name).format).toBeUndefined();
-		expect(typeof Filler.defined(name).list).toEqual('object');
+		expect(Filler.get(name).text).toBeUndefined();
+		expect(Filler.get(name).format).toBeUndefined();
+		expect(typeof Filler.get(name).list).toEqual('object');
 	});
 
 	it("With an Object" , function() {
@@ -103,18 +103,18 @@ describe("New Definition" , function() {
 			'format' : format
 		});
 		expect(Filler.text(name)).toMatch(/(\d) [a-z]+/);
-		expect(Filler.defined(name).text).toBeUndefined();
-		expect(typeof Filler.defined(name).format).toEqual('string');
-		expect(typeof Filler.defined(name).list).toEqual('object');
+		expect(Filler.get(name).text).toBeUndefined();
+		expect(typeof Filler.get(name).format).toEqual('string');
+		expect(typeof Filler.get(name).list).toEqual('object');
 	});
 
 	it("With a NULL Object" , function() {
 		Filler.define(name , null);
 		expect(Filler.text(name)).toEqual(undefined);
-		expect(typeof Filler.defined(name)).toEqual('object');
-		expect(Filler.defined(name).text).toBeUndefined();
-		expect(Filler.defined(name).format).toBeUndefined();
-		expect(Filler.defined(name).list).toBeUndefined();
+		expect(typeof Filler.get(name)).toEqual('object');
+		expect(Filler.get(name).text).toBeUndefined();
+		expect(Filler.get(name).format).toBeUndefined();
+		expect(Filler.get(name).list).toBeUndefined();
 	});
 
 });
