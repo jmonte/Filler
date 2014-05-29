@@ -70,9 +70,6 @@ var Filler = Filler || {};
 	};  // settings var
 
 
-
-
-
 	function run( o ) {
 		app.settings = extend(settings,o);
 		var elements =  getFillerElements();
@@ -135,7 +132,11 @@ var Filler = Filler || {};
 				} else {
 					// check if list is available
 					if( typeObj.list !== undefined ) {
-						finalText = typeObj.list[Math.floor(Math.random()*typeObj.list.length)];
+						if( typeObj.list.length > 0 ) {
+							finalText = typeObj.list[Math.floor(Math.random()*typeObj.list.length)];
+						} else {
+							finalText = undefined;
+						}
 					} else {
 						// throw a warning
 						console.warn('Invalid Filler definition :' + type);
@@ -165,15 +166,22 @@ var Filler = Filler || {};
 				textTypes[name].text = args;
 			} else if( typeof args == 'string') {
 				textTypes[name].format = args;
-			} else if ( typeof args == "object") {
-				if( args.text !== undefined ) {
-					textTypes[name].text = args.text;
-				}
-				if( args.format !== undefined ) {
-					textTypes[name].format = args.format;
-				}
-				if( args.list !== undefined ) {
-					textTypes[name].list = args.list;
+			} else if ( typeof args == "object" && args != null) {
+
+				if( Array.isArray(args) ) {
+					textTypes[name].list = args;
+				} else {
+
+					if( args.text !== undefined ) {
+						textTypes[name].text = args.text;
+					}
+					if( args.format !== undefined ) {
+						textTypes[name].format = args.format;
+					}
+					if( args.list !== undefined ) {
+						textTypes[name].list = args.list;
+					}
+
 				}
 			} else  {
 				console.warn("Invalid Filler Definition: "+ name);	
@@ -184,8 +192,12 @@ var Filler = Filler || {};
 	}
 
 
-	app.get = function( name ) {
+	app.text = function( name ) {
 		return executeType( name );
+	}
+
+	app.defined = function( name ) {
+		return textTypes[name];
 	}
 
 
