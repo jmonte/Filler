@@ -231,7 +231,7 @@ var Filler = Filler || {};
 		// check for string
 		finalText = finalText.replace(/\%(\d)?s/g, function(match , num) { 
 				var numText = "";
-				if( num === "" ) num = 1;	// num not defined set it to 1
+				if( num === "" || num === undefined ) num = 1;	// num not defined set it to 1
 				for(var i = 0 ; i < num ; i++ ) {
 					numText += settings.letters[Math.floor(Math.random()*settings.letters.length)];
 				}

@@ -1,23 +1,23 @@
+beforeEach(function() {
+	jasmine.addMatchers({
+		toBeInTheList : function( util, customEqualityTesters ) {
+			return {
+				compare: function( actual , list) {
+					var result = {};
+					result.pass = list.contains(actual);
+					return result;						
+				}
+			}
+		}
+	});
+});
+
 describe("New Definition" , function() {
 	var name = 'furniture';
 	var list = ['table' , 'chair' , 'lamp' , 'bed'];
 	var format = '%i {{0}}';
 
 	beforeEach(function() {
-
-		jasmine.addMatchers({
-			toBeInTheList : function( util, customEqualityTesters ) {
-				return {
-					compare: function( actual , list) {
-						var result = {};
-						result.pass = list.contains(actual);
-						return result;						
-					}
-				}
-			}
-		});
-
-
 		Filler.undefine(name);
 	});
 
@@ -52,7 +52,7 @@ describe("New Definition" , function() {
 
 	it("With a format String" , function() {
 		Filler.define(name , format);
-		expect(Filler.text(name)).toMatch(/(\d) \{\{0\}\}/);
+		expect(Filler.text(name)).toMatch(/^(\d) \{\{0\}\}$/);
 		expect(Filler.get(name).text).toBeUndefined();
 		expect(typeof Filler.get(name).format).toEqual('string');
 		expect(Filler.get(name).list).toBeUndefined();
@@ -90,7 +90,7 @@ describe("New Definition" , function() {
 			'list' : list,
 			'format' : format
 		});
-		expect(Filler.text(name)).toMatch(/(\d) [a-z]+/);
+		expect(Filler.text(name)).toMatch(/^(\d) [a-z]+$/);
 		expect(Filler.get(name).text).toBeUndefined();
 		expect(typeof Filler.get(name).format).toEqual('string');
 		expect(typeof Filler.get(name).list).toEqual('object');
@@ -104,5 +104,75 @@ describe("New Definition" , function() {
 		expect(Filler.get(name).format).toBeUndefined();
 		expect(Filler.get(name).list).toBeUndefined();
 	});
+
+});
+
+
+describe('Text Results' , function() {
+
+
+	beforeEach(function() {
+		Filler.undefine('countName');
+	});
+
+
+	it("String List" , function() {
+		expect(Filler.text('firstName')).toBeInTheList( Filler.get('firstName').list );
+	});
+
+	it("String Following Format" , function() {
+		Filler.define('countName' , {
+			format : '%i {{0}}'
+		});
+		expect(Filler.text('countName')).toMatch(/^\d{1} .+$/);
+	});
+
+
+	it("String With Definition on Format" , function() {
+		Filler.define('countName' , {
+			format : '%3i {{firstName}}'
+		});
+		expect(Filler.text('countName')).toMatch(/^\d{3} .+$/);
+	});
+
+	it("String With Incorrect Format" , function() {
+		Filler.define('countName' , {
+			format : '%i {{1}}'
+		});
+		expect(Filler.text('countName')).toMatch(/^\d{1} \{\{1\}\}$/);
+	});
+
+	it("Integer No Size" , function() {
+		Filler.define('num' , {
+			'format'  : '%i'			
+		});
+		expect(Filler.text('num')).toMatch(/^\d{1}$/);
+	});
+
+	it("Integer With Size" , function() {
+		Filler.define('num' , {
+			'format'  : '%8i'			
+		});
+		expect(Filler.text('num')).toMatch(/^\d{8}$/);
+	});
+
+	it("Letter No Size",function() {
+		Filler.define('letter' , {
+			'format'  : '%s'			
+		});
+		expect(Filler.text('letter')).toMatch(/^.{1}$/);
+	});
+
+	it("Letter With Size",function() {
+		Filler.define('letter' , {
+			'format'  : '%5s'			
+		});
+		expect(Filler.text('letter')).toMatch(/^[a-z]{5}$/);
+	});
+
+	// it("",function() {
+
+	// });
+
 
 });
