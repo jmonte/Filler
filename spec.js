@@ -19,7 +19,7 @@ describe("New Definition" , function() {
 
 	beforeEach(function() {
 		Filler.undefine(name);
-	});
+	}); 
 
 
 	it("With No Argument" , function() {

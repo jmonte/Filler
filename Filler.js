@@ -19,7 +19,7 @@ var Filler = Filler || {};
 					 	"Worthington",
 					 	"McCoy",
 					 	"Grey"]
-		},
+		}, 
 		'name' : {
 			'format' : '{{firstName}} {{lastName}}'
 		},

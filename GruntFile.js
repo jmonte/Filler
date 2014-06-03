@@ -18,7 +18,7 @@ module.exports = function(grunt) {
         src: 'Gruntfile.js'
       },
       src: {
-        src: ['filler.js']
+        src: ['*.js']
       }
     },
      jasmine: {
